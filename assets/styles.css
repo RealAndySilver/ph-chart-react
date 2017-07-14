@@ -1,0 +1,25 @@
+.selected_box{
+	height: 200px;
+}
+
+.chart-options div{
+	display: inline-block;
+	vertical-align: top;
+}
+
+.dates{
+	padding-top:10px;
+}
+.dates input{
+	margin:20px;
+}
+
+dates div:nth-of-type(1)  {
+	display: inline-block;
+}
+
+
+.multi-select{
+	padding-top: 30px;
+}
+
