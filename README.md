@@ -1,6 +1,6 @@
 # react-hornet-chart
 
-React app that grap using [React] with [webpack], and [babeljs], as well as project structure.
+React app that graph the data from the hornet API into a Bar chart using [React] with [webpack], and [babeljs], as well as project structure.
 
 Requirements:
 - git
@@ -10,7 +10,7 @@ Requirements:
 To run the app locally:
 
 ```bash
-git clone https://github.com/mzabriskie/react-example.git
+git clone https://bitbucket.org/projecthornet/react-hornet-chart
 cd react-example
 npm run setup
 npm run dev
