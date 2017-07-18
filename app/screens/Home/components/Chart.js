@@ -4,9 +4,7 @@
 import React from "react";
 import ReactDOM from 'react-dom';
 var _ = require('underscore');
-
-//import ReactFlot from 'react-flot';
-
+//import { Resizable, ResizableBox } from 'react-resizable';
 
 window.ReactDOM = ReactDOM;
 
@@ -27,8 +25,7 @@ const date_options = {
     month: "numeric", day: "numeric", hour: "2-digit"
 };
 
-//var hours = true;
-var isMinutes = false;
+var isMinutes = false, showDrop = true;
 
 //Chart page component
 export default class Chart extends React.Component {
@@ -58,7 +55,8 @@ export default class Chart extends React.Component {
 
         //group array by tag
         var grouped = _.chain(array.data).groupBy("tag").map(function (data, tag) {
-            var dataArray = _.map(data, function (it) {
+            var sortedArray = _.sortBy(data, function(o) { return o.date; });
+            var dataArray = _.map(sortedArray, function (it) {
                 return _.omit(it, "tag");
             });
             return {
@@ -77,7 +75,7 @@ export default class Chart extends React.Component {
             })
             tag.data.forEach(function (hour, h) {
                 time_array[index].hours.push({
-                    hour: new Date(hour.date).getHours() + 5,
+                    hour: new Date(hour.date).getHours(),
                     minutes: [],
                     date: hour.date
                 });
@@ -145,11 +143,16 @@ export default class Chart extends React.Component {
         endDate.setHours(23, 59, 59);
         var totalHours = Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60));
         console.log("total hours", totalHours);
-        var n = 0, labels = [];
+        var n = 0, labels = [], h = 0;
         for (var i = 0; i < totalHours; i++) {
             for (var j = 0; j < time_array.length; j++) {
                 if (time_array[j].hours[n]) {
-                    if (startDate.getHours() + i == time_array[j].hours[n].hour) {
+                    if(h == 24){
+                        h = 0;
+                    }
+                    console.log(startDate.getHours() + h,'==', time_array[j].hours[n].hour);
+                    
+                    if (startDate.getHours() + h == time_array[j].hours[n].hour) {
                         var date = new Date(time_array[j].hours[n].date).toLocaleDateString("en-US", date_options);
                         labels.push(date);
                         n++;
@@ -157,6 +160,7 @@ export default class Chart extends React.Component {
                     }
                 }
             }
+            h++;
         }
         console.log("labels, ", labels);
         return labels;
@@ -226,6 +230,7 @@ export default class Chart extends React.Component {
     }
 
     showHourDetail() {
+        showDrop = true;
         this.state.selectedMinute = '...';
         let getMinuteLabels = this.getMinuteLabels;
         let getAvg = this.getAvg;
@@ -266,6 +271,7 @@ export default class Chart extends React.Component {
     }
 
     showMinuteDetail() {
+        showDrop = false;
         let getSecondLabels = this.getSecondLabels;
         let getAvg = this.getAvg;
         var time_array = this.state.time_array;
@@ -307,7 +313,11 @@ export default class Chart extends React.Component {
     }
 
     reset() {
-        this.state.isMinutes = false;
+        showDrop = true;
+        let getLabels = this.getLabels.bind(this);
+        let getValues = this.getValues.bind(this);
+
+        isMinutes = false;
         this.state.selectedHour = '...';
         this.state.selectedMinute = '...';
         var time_array = this.state.time_array;
@@ -322,12 +332,13 @@ export default class Chart extends React.Component {
     render() {
         console.log("rendering Data Chart");
         var minutes = null;
-
+        var tags = [];
         var datasets = [];
         var n = 0;
         var labels = this.state.labels;
         this.state.chart_values.forEach(function (data_chart) {
             var color = colorEnum.properties[n].color;
+            tags.push = data_chart.tag;  
             datasets.push({
                 label: data_chart.tag,
                 type: 'line',
@@ -348,26 +359,33 @@ export default class Chart extends React.Component {
             datasets: datasets
         };
 
+        const renderButtons = item => <button onClick={alert(item)}>{item}</button>
+        const tagButtons = tags.map(renderButtons);
+
         const renderOption = item => <option value={item}>{item}</option>;
         const hours = labels.map(renderOption);
         return (
             <div >
+                    {tags}
                     <div className="col-md-5 chart-options">
                         <h2>
+                            <div><a onClick={this.reset}><span>Chart</span> </a><span> ></span></div>
                             {this.state.selectedHour != '...' ? (
-                                <div><span> > </span><a onClick={this.showHourDetail}>{this.state.selectedHour} </a>
+                                <div><span>> </span><a onClick={this.showHourDetail}>{this.state.selectedHour} </a><span> ></span>
                                     {this.state.selectedMinute != '...' ?
-                                        <div><span> > </span><a onClick={this.showMinuteDetail}>minute {this.state.selectedMinute}</a> </div> : <div></div>
+                                        <div><span>> </span><a onClick={this.showMinuteDetail}>minute {this.state.selectedMinute}</a> </div> : <div></div>
                                     }</div>)
                                 : <span></span>
                             }
 
                         </h2>
+                        {showDrop ? <div>
                         {isMinutes ? <label>Minute:</label> : <label>Hour:</label>}
                         <select className="form-control" onChange={this.change} value={this.state.selectedHour}>
                             <option value='...'>...</option>
                             {hours}
                         </select>
+                        </div>:<div></div>}
                     </div>
                     <Line ref='chart' data={data} ref={(ref) => this.Line = ref} /> 
             </div >

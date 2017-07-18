@@ -64,7 +64,7 @@ export default class Home extends React.Component {
     }
 
     loadMultiSelect(filter) {
-        var url = "http://107.170.10.118:3000/mongo-api/getTagsLike/" + filter;
+        var url = "http://107.170.10.118:3001/mongo-api/getTagsLike/" + filter;
 
         $.ajax({
             url: url,
@@ -98,13 +98,15 @@ export default class Home extends React.Component {
         //this.handleChangeStart(startDate);
         //this.handleChangeEnd(endDate);
         var variable = this.state.variable;
+        var url = "http://107.170.10.118:3001/mongo-api/get/" + tags + "/" + startDate + "/" + endDate + "/" + variable;
         $.ajax({
-            url: "http://107.170.10.118:3000/mongo-api/get/" + tags + "/" + startDate + "/" + endDate + "/" + variable,
+            url: url,
             contentType: "application/json",
             success: function (dataFiltered) {
                 this.setState({ dataFiltered: dataFiltered });
                 this.setState({loaded:true});
                 console.log("dataFiltered", this.state.dataFiltered);
+                console.log("url: ", url);
             }.bind(this),
             error: function (xhr, status, error) {
                 console.error(status, error.toString());
@@ -129,7 +131,7 @@ export default class Home extends React.Component {
             array.forEach(function (obj) {
                 tags.push({
                     "id": i,
-                    "tag": obj.tag
+                    "tag": obj._id
                 });
                 i++;
             });
