@@ -1,0 +1,112 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "react-filtered-multiselect@^0.5.0",
+        "scope": null,
+        "escapedName": "react-filtered-multiselect",
+        "name": "react-filtered-multiselect",
+        "rawSpec": "^0.5.0",
+        "spec": ">=0.5.0 <0.6.0",
+        "type": "range"
+      },
+      "/Users/parzifal/Code/Node/react-hornet-chart"
+    ]
+  ],
+  "_from": "react-filtered-multiselect@>=0.5.0 <0.6.0",
+  "_id": "react-filtered-multiselect@0.5.0",
+  "_inCache": true,
+  "_location": "/react-filtered-multiselect",
+  "_nodeVersion": "6.9.0",
+  "_npmOperationalInternal": {
+    "host": "s3://npm-registry-packages",
+    "tmp": "tmp/react-filtered-multiselect-0.5.0.tgz_1496223513082_0.035689004231244326"
+  },
+  "_npmUser": {
+    "name": "insin",
+    "email": "jonathan.buchanan@gmail.com"
+  },
+  "_npmVersion": "3.10.8",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "react-filtered-multiselect@^0.5.0",
+    "scope": null,
+    "escapedName": "react-filtered-multiselect",
+    "name": "react-filtered-multiselect",
+    "rawSpec": "^0.5.0",
+    "spec": ">=0.5.0 <0.6.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-filtered-multiselect/-/react-filtered-multiselect-0.5.0.tgz",
+  "_shasum": "7c5fc8043c8465f5f49101e3081e5b7f78eaec2c",
+  "_shrinkwrap": null,
+  "_spec": "react-filtered-multiselect@^0.5.0",
+  "_where": "/Users/parzifal/Code/Node/react-hornet-chart",
+  "author": {
+    "name": "Jonny Buchanan",
+    "email": "jonathan.buchanan@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/insin/react-filtered-multiselect/issues"
+  },
+  "dependencies": {
+    "prop-types": "^15.5.7"
+  },
+  "description": "Filtered multi-select React component",
+  "devDependencies": {
+    "bootstrap": "3.3.x",
+    "eslint-config-jonnybuchanan": "5.0.x",
+    "nwb": "0.16.x",
+    "react": "15.x",
+    "react-dom": "15.x"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "7c5fc8043c8465f5f49101e3081e5b7f78eaec2c",
+    "tarball": "https://registry.npmjs.org/react-filtered-multiselect/-/react-filtered-multiselect-0.5.0.tgz"
+  },
+  "files": [
+    "es",
+    "lib",
+    "umd"
+  ],
+  "gitHead": "f90a228b60091b66b743eefc97caa8c73dec890b",
+  "homepage": "https://github.com/insin/react-filtered-multiselect",
+  "keywords": [
+    "react",
+    "react-component",
+    "filtered",
+    "multiselect",
+    "select-multiple"
+  ],
+  "license": "MIT",
+  "main": "lib/index.js",
+  "maintainers": [
+    {
+      "name": "insin",
+      "email": "jonathan.buchanan@gmail.com"
+    }
+  ],
+  "module": "es/index.js",
+  "name": "react-filtered-multiselect",
+  "optionalDependencies": {},
+  "peerDependencies": {
+    "react": ">=0.14.9"
+  },
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/insin/react-filtered-multiselect.git"
+  },
+  "scripts": {
+    "build": "nwb build-react-component",
+    "clean": "nwb clean-module && nwb clean-demo",
+    "lint": "eslint src demo",
+    "start": "nwb serve-react-demo",
+    "test": "npm run lint"
+  },
+  "version": "0.5.0"
+}
