@@ -34,8 +34,12 @@ export default class MultiSelect extends React.Component {
     }
     handleSelectionChange = (selectedOptions) => {
         selectedOptions.sort((a, b) => a.id - b.id)
-        this.setState({ selectedOptions })
-        this.props.handleSelectedOptions(selectedOptions);
+        if (selectedOptions.length > 8) {
+            alert("Can't Add more than 8 elements!!");
+        } else {
+            this.setState({ selectedOptions })
+            this.props.handleSelectedOptions(selectedOptions);
+        }
     }
 
     onInputChange(term) {
@@ -45,7 +49,7 @@ export default class MultiSelect extends React.Component {
 
     render() {
         console.log("rendering multi select");
-        var {selectedOptions} = this.state;
+        var { selectedOptions } = this.state;
         return (
             <div className="multi-select">
                 <div className="col-md-5">

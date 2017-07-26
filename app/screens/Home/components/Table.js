@@ -31,19 +31,14 @@ export default class Chart extends React.Component {
             var date = tag.date;
             var tagdata = Object.values(tag.data);
             tagdata.forEach(function (minute) {
-                //date.setMinutes(Object.keys(minute));
                 minute_values = Object.values(minute)
-                //console.log("minute: ", Object.keys(minute));
                 minute_values.forEach(function (value) {
                     value = value.substring(1);
-                    //date.setSeconds(Object.keys(value));
-                    //second_values = Object.values(minute);
                     data.push({
                         tag: name,
                         date: date,
                         path: hostname + value
-                    });
-                    //data_chart_array.data.push(second);       
+                    });     
                 });
             });
         });

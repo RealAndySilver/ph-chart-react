@@ -32,9 +32,11 @@ export default class Home extends React.Component {
             endDate: moment(),
             variable: 'PV',
             dataFiltered: null,
-            loaded: true
+            loaded: true,
+            isRealTime: false
         }
         this.loadDataFiltered = this.loadDataFiltered.bind(this);
+        this.loadRealTime = this.loadRealTime.bind(this);
         this.loadMultiSelect = this.loadMultiSelect.bind(this);
         this.handleChangeStart = this.handleChangeStart.bind(this);
         this.handleChangeEnd = this.handleChangeEnd.bind(this);
@@ -42,8 +44,6 @@ export default class Home extends React.Component {
     }
 
     componentDidMount() {
-        /*let loadMultiSelect = this.loadMultiSelect.bind(this);
-        loadMultiSelect();*/
     }
     handleSelectedOptions(selectedOptions) {
         this.setState({
@@ -95,8 +95,6 @@ export default class Home extends React.Component {
         var endDate = new Date(this.state.endDate);
         startDate.setHours(0, 0, 0);
         endDate.setHours(23, 59, 59);
-        //this.handleChangeStart(startDate);
-        //this.handleChangeEnd(endDate);
         var variable = this.state.variable;
         var url = "http://107.170.10.118:3001/mongo-api/get/" + tags + "/" + startDate + "/" + endDate + "/" + variable;
         $.ajax({
@@ -104,9 +102,41 @@ export default class Home extends React.Component {
             contentType: "application/json",
             success: function (dataFiltered) {
                 this.setState({ dataFiltered: dataFiltered });
-                this.setState({loaded:true});
+                this.setState({ loaded: true });
                 console.log("dataFiltered", this.state.dataFiltered);
                 console.log("url: ", url);
+            }.bind(this),
+            error: function (xhr, status, error) {
+                console.error(status, error.toString());
+            }
+        })
+
+
+    }
+
+    loadRealTime() {
+        this.setState({
+            loaded: false
+        });
+        this.setState({ dataFiltered: null });
+        var tags = '';
+        this.state.selectedOptions.forEach(function (obj) {
+            tags = tags + obj.tag + ',';
+        });
+        tags = tags.slice(',', -1);
+        var variable = this.state.variable;
+        var url = "http://107.170.10.118:3001/mongo-api/getLatest/" + tags + "/" + variable;
+        $.ajax({
+            url: url,
+            contentType: "application/json",
+            success: function (dataFiltered) {
+                this.setState({
+                    isRealTime: true,
+                    dataFiltered: dataFiltered,
+                    url: url
+                });
+                this.setState({ loaded: true });
+                console.log("dataFiltered", this.state.dataFiltered);
             }.bind(this),
             error: function (xhr, status, error) {
                 console.error(status, error.toString());
@@ -119,6 +149,8 @@ export default class Home extends React.Component {
     change(event) {
         this.setState({ variable: event.target.value });
     }
+
+
 
     render() {
         console.log("rendering app component");
@@ -172,23 +204,26 @@ export default class Home extends React.Component {
                     />
                 </div>
                 <button type="button" className="btn btn btn-default" onClick={this.loadDataFiltered}>Load Chart</button>
+                <button type="button" className="btn btn btn-default" onClick={this.loadRealTime}>Load Real Time</button>
 
                 <Loader loaded={this.state.loaded}>
-                    {this.state.dataFiltered != null && this.state.variable == 'PV' ?
-                        <Chart
-                            dataFiltered={this.state.dataFiltered}
-                            startDate={this.state.startDate}
-                            endDate={this.state.endDate}
 
-                        /> :
+                    {this.state.dataFiltered != null && this.state.variable == 'PV' ?
+                        <div>                         
+                            <Chart
+                                dataFiltered={this.state.dataFiltered}
+                                startDate={this.state.startDate}
+                                endDate={this.state.endDate}
+                                isRealTime={this.state.isRealTime}
+                                loadRealTime={this.loadRealTime}
+                                url={this.state.url}
+
+                            />
+                        </div> :
                         this.state.dataFiltered != null && this.state.variable == 'AP' ?
                             <Table
                                 dataFiltered={this.state.dataFiltered}
                             />
-                            /*<BootstrapTable data={this.state.dataF} striped hover condensed>
-                                <TableHeaderColumn width='250' dataField='_id' isKey>Product ID</TableHeaderColumn>
-                                <TableHeaderColumn width='250' dataField='tag'>Tag Name</TableHeaderColumn>
-                            </BootstrapTable>*/
 
                             :
                             <div></div>}
