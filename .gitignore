@@ -1,5 +1,6 @@
+!node_modules/
 node_modules/*
-!node_modules/react-filtered-multiselect
+!node_modules/react-filtered-multiselect/
 build/
 coverage/
 .nyc_output/
