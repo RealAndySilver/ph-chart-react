@@ -64,7 +64,7 @@ export default class Home extends React.Component {
     }
 
     loadMultiSelect(filter) {
-        var url = "http://107.170.10.118:3001/mongo-api/getTagsLike/" + filter;
+        var url = "http://192.168.0.143:3001/mongo-api/getTagsLike/" + filter;
 
         $.ajax({
             url: url,
@@ -96,15 +96,13 @@ export default class Home extends React.Component {
         startDate.setHours(0, 0, 0);
         endDate.setHours(23, 59, 59);
         var variable = this.state.variable;
-        var url = "http://107.170.10.118:3001/mongo-api/get/" + tags + "/" + startDate + "/" + endDate + "/" + variable;
+        var url = "http://192.168.0.143:3001/mongo-api/get/" + tags + "/" + startDate + "/" + endDate + "/" + variable;
         $.ajax({
             url: url,
             contentType: "application/json",
             success: function (dataFiltered) {
-                this.setState({ dataFiltered: dataFiltered });
+                this.setState({ isRealTime: false, dataFiltered: dataFiltered });
                 this.setState({ loaded: true });
-                console.log("dataFiltered", this.state.dataFiltered);
-                console.log("url: ", url);
             }.bind(this),
             error: function (xhr, status, error) {
                 console.error(status, error.toString());
@@ -125,7 +123,7 @@ export default class Home extends React.Component {
         });
         tags = tags.slice(',', -1);
         var variable = this.state.variable;
-        var url = "http://107.170.10.118:3001/mongo-api/getLatest/" + tags + "/" + variable;
+        var url = "http://192.168.0.143:3001/mongo-api/getLatest/" + tags + "/" + variable;
         $.ajax({
             url: url,
             contentType: "application/json",
@@ -136,7 +134,6 @@ export default class Home extends React.Component {
                     url: url
                 });
                 this.setState({ loaded: true });
-                console.log("dataFiltered", this.state.dataFiltered);
             }.bind(this),
             error: function (xhr, status, error) {
                 console.error(status, error.toString());

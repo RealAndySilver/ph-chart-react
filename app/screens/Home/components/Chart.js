@@ -46,7 +46,7 @@ export default class Chart extends React.Component {
             selectedMinute: "...",
             selectedTag: null,
             realTimeData: null,
-            realTimeRefresh: 10000
+            realTimeRefresh: 1000
         }
 
         this.change = this.change.bind(this);
@@ -69,7 +69,7 @@ export default class Chart extends React.Component {
         this.initArray(this.props.dataFiltered);
 
     }
-    
+
 
     initArray(array) {
         var time_array = this.getTimeArray(array);
@@ -79,14 +79,16 @@ export default class Chart extends React.Component {
             this.setState({
                 time_array: time_array,
                 selectedHour: new Date().toLocaleDateString("en-US", date_options),
-                //selectedMinute: new Date().getMinutes()
+                selectedMinute: new Date().getMinutes()
             }, function () {
-                if (isMinutes && isSecond) {
-                    this.showMinuteDetail();
+                this.showMinuteDetail();
+                /*if (isMinutes && isSecond) {
+                    console.log("showMinuteDetail");
+                    
                 } else {
                     isMinutes = true;
                     this.showHourDetail();
-                }
+                }*/
 
             });
         } else {
@@ -101,14 +103,20 @@ export default class Chart extends React.Component {
 
     loadRealTime() {
         var url = this.props.url;
+        isMinutes = true;
+        isSecond = true;
         $.ajax({
             url: url,
             contentType: "application/json",
             success: function (realTimeData) {
                 this.setState({
-                    realTimeData: realTimeData
+                    realTimeData: realTimeData,
+                    //selectedHour: new Date().toLocaleDateString("en-US", date_options),
+                    //selectedMinute: new Date().getMinutes(),
                 });
                 console.log("realTimeData ", realTimeData);
+                //this.showHourDetail();
+
                 this.initArray(realTimeData);
             }.bind(this),
             error: function (xhr, status, error) {
@@ -335,6 +343,7 @@ export default class Chart extends React.Component {
         var time_array = this.state.time_array;
         var selectedHour = this.state.selectedHour;
         var selectedMinute = this.state.selectedMinute;
+        
         var chart_values = [], labels = [];
         var second_values = [], tempArray = [];
         time_array.forEach(function (tag, i) {
@@ -345,10 +354,12 @@ export default class Chart extends React.Component {
             tag.hours.forEach(function (hour) {
                 var date = new Date(hour.date).toLocaleDateString("en-US", date_options);
                 if (date == selectedHour) {
+                    console.log("selectedMinute: ", selectedMinute);
                     //tempArray.push(hour);
                     hour.minutes.forEach(function (minute) {
                         second_values = [];
                         if (selectedMinute == minute.minute) {
+                            
                             tempArray.push(minute);
                             minute.seconds.forEach(function (second) {
                                 chart_values[i].data.push(second.value);
@@ -454,15 +465,15 @@ export default class Chart extends React.Component {
                     </div> : <div></div>}
                     {this.props.isRealTime != null ?
 
-                            <div className="col-md-3">
-                                <label>Reload every:</label>
-                                <select className="form-control" onChange={this.changeRealTime} value={this.state.realTimeRefresh}>
-                                    <option value='60000'>60 seconds</option>
-                                    <option value='30000'>30 seconds</option>
-                                    <option value='10000'>10 seconds</option>
+                        <div className="col-md-3">
+                            <label>Reload every:</label>
+                            <select className="form-control" onChange={this.changeRealTime} value={this.state.realTimeRefresh}>
+                                <option value='60000'>60 seconds</option>
+                                <option value='30000'>30 seconds</option>
+                                <option value='1000'>10 seconds</option>
 
-                                </select>
-                            </div>
+                            </select>
+                        </div>
                         :
                         <div></div>
                     }
