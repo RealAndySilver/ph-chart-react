@@ -46,7 +46,7 @@ export default class Chart extends React.Component {
             selectedMinute: "...",
             selectedTag: null,
             realTimeData: null,
-            realTimeRefresh: 1000
+            realTimeRefresh: 5000
         }
 
         this.change = this.change.bind(this);
@@ -76,10 +76,12 @@ export default class Chart extends React.Component {
 
         if (this.props.isRealTime) {
             console.log("real_time_array:", time_array);
+            var now = new Date();
+            now.setSeconds(now.getSeconds() - 10);
             this.setState({
                 time_array: time_array,
                 selectedHour: new Date().toLocaleDateString("en-US", date_options),
-                selectedMinute: new Date().getMinutes()
+                selectedMinute: now.getMinutes()
             }, function () {
                 this.showMinuteDetail();
                 /*if (isMinutes && isSecond) {
@@ -470,7 +472,7 @@ export default class Chart extends React.Component {
                             <select className="form-control" onChange={this.changeRealTime} value={this.state.realTimeRefresh}>
                                 <option value='60000'>60 seconds</option>
                                 <option value='30000'>30 seconds</option>
-                                <option value='1000'>10 seconds</option>
+                                <option value='5000'>10 seconds</option>
 
                             </select>
                         </div>
