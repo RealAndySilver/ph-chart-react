@@ -32,7 +32,7 @@ const minute_options = {
     minute: "2-digit"
 };
 
-var isMinutes = false, showDrop = true, isSecond = false;
+var isMinutes = false, showDrop = true, isSecond = false, interval;
 
 //Chart page component
 export default class Chart extends React.Component {
@@ -46,7 +46,7 @@ export default class Chart extends React.Component {
             selectedMinute: "...",
             selectedTag: null,
             realTimeData: null,
-            realTimeRefresh: 5000
+            realTimeRefresh: 10000
         }
 
         this.change = this.change.bind(this);
@@ -59,16 +59,18 @@ export default class Chart extends React.Component {
     }
 
     componentDidMount() {
-        let loadRealTime = this.loadRealTime.bind(this);
-        if(!this.props.realTimeData){
-            this.reset();
-        }
-        setInterval(function () {
-            if (this.props.isRealTime) {
-                loadRealTime();
-            }
-        }.bind(this), this.state.realTimeRefresh);
 
+        let loadRealTime = this.loadRealTime.bind(this);
+        if (!this.props.realTimeData) {
+            this.reset();
+            clearInterval(interval);
+        } 
+           interval = setInterval(function () {
+                if (this.props.isRealTime) {
+                    loadRealTime();
+                }
+            }.bind(this), this.state.realTimeRefresh);
+        
         this.initArray(this.props.dataFiltered);
 
     }
@@ -76,7 +78,7 @@ export default class Chart extends React.Component {
 
     initArray(array) {
         var time_array = this.getTimeArray(array);
-
+        console.log("isRealTime: ", this.props.isRealTime);
         if (this.props.isRealTime) {
             console.log("real_time_array:", time_array);
             var now = new Date();
@@ -348,7 +350,7 @@ export default class Chart extends React.Component {
         var time_array = this.state.time_array;
         var selectedHour = this.state.selectedHour;
         var selectedMinute = this.state.selectedMinute;
-        
+
         var chart_values = [], labels = [];
         var second_values = [], tempArray = [];
         time_array.forEach(function (tag, i) {
@@ -364,7 +366,7 @@ export default class Chart extends React.Component {
                     hour.minutes.forEach(function (minute) {
                         second_values = [];
                         if (selectedMinute == minute.minute) {
-                            
+
                             tempArray.push(minute);
                             minute.seconds.forEach(function (second) {
                                 chart_values[i].data.push(second.value);
@@ -475,7 +477,7 @@ export default class Chart extends React.Component {
                             <select className="form-control" onChange={this.changeRealTime} value={this.state.realTimeRefresh}>
                                 <option value='60000'>60 seconds</option>
                                 <option value='30000'>30 seconds</option>
-                                <option value='5000'>10 seconds</option>
+                                <option value='10000'>10 seconds</option>
 
                             </select>
                         </div>
