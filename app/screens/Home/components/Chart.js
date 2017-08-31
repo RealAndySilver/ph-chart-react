@@ -60,6 +60,9 @@ export default class Chart extends React.Component {
 
     componentDidMount() {
         let loadRealTime = this.loadRealTime.bind(this);
+        if(!this.props.realTimeData){
+            this.reset();
+        }
         setInterval(function () {
             if (this.props.isRealTime) {
                 loadRealTime();
